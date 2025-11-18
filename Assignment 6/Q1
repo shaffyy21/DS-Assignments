@@ -1,1 +1,189 @@
+#include <iostream>
+using namespace std;
 
+struct Node {
+    int data;
+    Node* next;
+};
+
+Node* createNode(int data) {
+    Node* newNode = new Node{data, nullptr};
+    return newNode;
+}
+
+void display(Node* head) {
+    if (!head) return;
+    Node* temp = head;
+    do {
+        cout << temp->data << " ";
+        temp = temp->next;
+    } while (temp != head);
+    cout << endl;
+}
+
+Node* insertFirst(Node* head, int data) {
+    Node* newNode = createNode(data);
+    if (!head) {
+        newNode->next = newNode;
+        return newNode;
+    }
+    Node* temp = head;
+    while (temp->next != head)
+        temp = temp->next;
+    temp->next = newNode;
+    newNode->next = head;
+    return newNode; // new head
+}
+
+Node* insertLast(Node* head, int data) {
+    Node* newNode = createNode(data);
+    if (!head) {
+        newNode->next = newNode;
+        return newNode;
+    }
+    Node* temp = head;
+    while (temp->next != head)
+        temp = temp->next;
+    temp->next = newNode;
+    newNode->next = head;
+    return head;
+}
+
+Node* insertAfter(Node* head, int target, int data) {
+    if (!head) return nullptr;
+    Node* temp = head;
+    do {
+        if (temp->data == target) {
+            Node* newNode = createNode(data);
+            newNode->next = temp->next;
+            temp->next = newNode;
+            return head;
+        }
+        temp = temp->next;
+    } while (temp != head);
+    cout << "Node " << target << " not found.\n";
+    return head;
+}
+
+Node* insertBefore(Node* head, int target, int data) {
+    if (!head) return nullptr;
+    if (head->data == target) {
+        return insertFirst(head, data);
+    }
+    Node* temp = head;
+    do {
+        if (temp->next->data == target) {
+            Node* newNode = createNode(data);
+            newNode->next = temp->next;
+            temp->next = newNode;
+            return head;
+        }
+        temp = temp->next;
+    } while (temp != head);
+    cout << "Node " << target << " not found.\n";
+    return head;
+}
+
+Node* deleteNode(Node* head, int target) {
+    if (!head) return nullptr;
+    if (head->data == target) {
+        if (head->next == head) {
+            delete head;
+            return nullptr;
+        }
+        Node* last = head;
+        while (last->next != head)
+            last = last->next;
+        Node* temp = head;
+        head = head->next;
+        last->next = head;
+        delete temp;
+        return head;
+    }
+    Node* temp = head;
+    do {
+        if (temp->next->data == target) {
+            Node* delNode = temp->next;
+            temp->next = delNode->next;
+            delete delNode;
+            return head;
+        }
+        temp = temp->next;
+    } while (temp != head);
+    cout << "Node " << target << " not found.\n";
+    return head;
+}
+
+bool searchNode(Node* head, int target) {
+    if (!head) return false;
+    Node* temp = head;
+    do {
+        if (temp->data == target)
+            return true;
+        temp = temp->next;
+    } while (temp != head);
+    return false;
+}
+
+int main() {
+    Node* head = nullptr;
+    int choice, data, target;
+
+    do {
+        cout << "\n--- Circular Linked List Menu ---\n";
+        cout << "1. Insert at first\n2. Insert at last\n3. Insert after a node\n4. Insert before a node\n";
+        cout << "5. Delete a node\n6. Search a node\n7. Display list\n0. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cout << "Enter data: ";
+                cin >> data;
+                head = insertFirst(head, data);
+                break;
+            case 2:
+                cout << "Enter data: ";
+                cin >> data;
+                head = insertLast(head, data);
+                break;
+            case 3:
+                cout << "Enter target node: ";
+                cin >> target;
+                cout << "Enter data: ";
+                cin >> data;
+                head = insertAfter(head, target, data);
+                break;
+            case 4:
+                cout << "Enter target node: ";
+                cin >> target;
+                cout << "Enter data: ";
+                cin >> data;
+                head = insertBefore(head, target, data);
+                break;
+            case 5:
+                cout << "Enter node to delete: ";
+                cin >> target;
+                head = deleteNode(head, target);
+                break;
+            case 6:
+                cout << "Enter node to search: ";
+                cin >> target;
+                if (searchNode(head, target))
+                    cout << "Node found.\n";
+                else
+                    cout << "Node not found.\n";
+                break;
+            case 7:
+                display(head);
+                break;
+            case 0:
+                cout << "Exiting...\n";
+                break;
+            default:
+                cout << "Invalid choice!\n";
+        }
+    } while (choice != 0);
+
+    return 0;
+}
