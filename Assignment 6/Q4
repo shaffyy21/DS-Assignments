@@ -1,0 +1,53 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    char data;
+    Node* prev;
+    Node* next;
+};
+
+// Function to check if the doubly linked list is a palindrome
+bool isPalindrome(Node* head) {
+    if (!head) return true;
+
+    Node* left = head;
+    Node* right = head;
+
+    // Move right to the last node
+    while (right->next)
+        right = right->next;
+
+    // Compare from both ends
+    while (left != right && right->next != left) {
+        if (left->data != right->data)
+            return false;
+        left = left->next;
+        right = right->prev;
+    }
+    return true;
+}
+
+int main() {
+    // Create nodes manually
+    Node* a = new Node{'r', nullptr, nullptr};
+    Node* b = new Node{'a', a, nullptr};
+    Node* c = new Node{'d', b, nullptr};
+    Node* d = new Node{'a', c, nullptr};
+    Node* e = new Node{'r', d, nullptr};
+
+    // Linking the nodes
+    a->next = b;
+    b->next = c;
+    c->next = d;
+    d->next = e;
+
+    Node* head = a;
+
+    if (isPalindrome(head))
+        cout << "Palindrome";
+    else
+        cout << "Not Palindrome";
+
+    return 0;
+}
