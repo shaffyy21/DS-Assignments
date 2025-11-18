@@ -1,0 +1,36 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* prev;
+    Node* next;
+};
+
+// Function to find size of doubly linked list
+int getSize(Node* head) {
+    int count = 0;
+    Node* temp = head;
+    while (temp) {
+        count++;
+        temp = temp->next;
+    }
+    return count;
+}
+
+int main() {
+    // Create nodes manually
+    Node* n1 = new Node{10, nullptr, nullptr};
+    Node* n2 = new Node{20, n1, nullptr};
+    Node* n3 = new Node{30, n2, nullptr};
+
+    // Link nodes
+    n1->next = n2;
+    n2->next = n3;
+
+    Node* head = n1;
+
+    cout << "Size of Doubly Linked List: " << getSize(head);
+
+    return 0;
+}
